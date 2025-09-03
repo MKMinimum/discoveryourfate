@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Random Text Database Entries</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    .entry { margin-bottom: 1em; padding: 1em; background: #f4f4f4; border-radius: 6px; }
+    #refresh { margin-top: 2em; }
+  </style>
+</head>
+<body>
+  <h1>Random Entries from Database</h1>
+  <div id="entries"></div>
+  <button id="refresh">Discover your fate</button>
+  <script>
+    async function fetchData() {
+      const response = await fetch('data.json');
+      return response.json();
+    }
+
+    function getRandomEntries(data, count) {
+      const shuffled = data.slice().sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+
+    function showEntries(entries) {
+      const container = document.getElementById('entries');
+      container.innerHTML = '';
+      entries.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.textContent = entry.text;
+        container.appendChild(div);
+      });
+    }
+
+    async function renderRandomEntries() {
+      const data = await fetchData();
+      const randomEntries = getRandomEntries(data, 4);
+      showEntries(randomEntries);
+    }
+
+    document.getElementById('refresh').addEventListener('click', renderRandomEntries);
+
+    // Initial render
+    renderRandomEntries();
+  </script>
+</body>
+</html>
